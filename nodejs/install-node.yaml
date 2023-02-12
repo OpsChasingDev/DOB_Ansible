@@ -27,9 +27,18 @@
       npm:
         path: /root/package
     - name: start app
+      # 'command' and 'shell' tasks are NOT STATEFUL
       command:
         chdir: /root/package/app
         cmd: node server
       # this attribute "async" prevents the node executable from blocking the playbook from completing
       async: 1000
       poll: 0
+    - name: ensure app is running
+      # 'shell' is different than 'command' because shell will operate in the shell and use things like pipeline and &&
+      # 'command' is generally considered more secure, so that is the preference if it can work that way
+      # 'register' is a module that captures the output of any task execution in the playbook (that's handy!)
+      # info captured in 'register' can be output using the 'debug' task shown in the next task, calling var from jinja {{}}
+      shell: ps aux | grep node
+      register: app_status
+    - debug: msg={{app_status}}
