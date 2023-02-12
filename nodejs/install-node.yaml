@@ -23,3 +23,13 @@
         src: /root/app-1.0.0.tgz
         dest: /root/
         remote_src: yes
+    - name: install dependencies
+      npm:
+        path: /root/package
+    - name: start app
+      command:
+        chdir: /root/package/app
+        cmd: node server
+      # this attribute "async" prevents the node executable from blocking the playbook from completing
+      async: 1000
+      poll: 0
