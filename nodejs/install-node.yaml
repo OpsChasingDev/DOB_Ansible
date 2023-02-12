@@ -1,0 +1,25 @@
+---
+- name: install node and npm
+  hosts: 157.245.139.10
+  tasks:
+    - name: Update apt repo and cache
+      apt: update_cache=true force_apt_get=yes cache_valid_time=3600
+    - name: Install nodejs and npm
+      apt:
+        update_cache: true
+        pkg:
+          - nodejs
+          - npm
+
+- name: deploy nodejs app
+  hosts: 157.245.139.10
+  tasks:
+    - name: copy nodejs folder to server
+      copy:
+        src: /home/robert/git/simple-nodejs/nodejs-app-1.0.0.tgz
+        dest: /root/app-1.0.0.tgz
+    - name: unpack nodejs tar file
+      unarchive:
+        src: /root/app-1.0.0.tgz
+        dest: /root/
+        remote_src: yes
