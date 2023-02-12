@@ -1,0 +1,13 @@
+---
+- name: config nginx server
+  hosts: webserver
+  tasks:
+  - name: install nginx
+    apt:
+      name: nginx
+      update_cache: true
+      state: latest
+  - name: start nginx
+    service:
+      name: nginx
+      state: started
