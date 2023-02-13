@@ -19,6 +19,8 @@
 
 - name: create app user
   hosts: node_servers
+  vars_files:
+    - vars-file
   tasks:
     - name: create linux user
       user:
@@ -31,6 +33,8 @@
   # these next two attributes enable this play to run as the user we specified instead of root
   become: True
   become_user: "{{app_user_account}}"
+  vars_files:
+    - vars-file
   tasks:
     - name: copy nodejs folder to server
       copy:
