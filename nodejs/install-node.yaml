@@ -1,3 +1,7 @@
+## tgz_location = "/home/robert/git/simple-nodejs"/nodejs-app-1.0.0.tgz
+## destination_path = "/home/appuser"
+## app_version = "1.0.0"
+
 ---
 - name: install node and npm
   hosts: node_servers
@@ -28,20 +32,20 @@
   tasks:
     - name: copy nodejs folder to server
       copy:
-        src: /home/robert/git/simple-nodejs/nodejs-app-1.0.0.tgz
-        dest: /home/appuser/app-1.0.0.tgz
+        src: "{{tgz_location}}/nodejs-app-{{app_version}}.tgz"
+        dest: "{{destination_path}}/app-{{app_version}}.tgz"
     - name: unpack nodejs tar file
       unarchive:
-        src: /home/appuser/app-1.0.0.tgz
-        dest: /home/appuser/
+        src: "{{destination_path}}/app-{{app_version}}.tgz"
+        dest: "{{destination_path}}/"
         remote_src: yes
     - name: install dependencies
       npm:
-        path: /home/appuser/package
+        path: "{{destination_path}}/package"
     - name: start app
       # 'command' and 'shell' tasks are NOT STATEFUL
       command:
-        chdir: /home/appuser/package/app
+        chdir: "{{destination_path}}/package/app"
         cmd: node server
       # this attribute "async" prevents the node executable from blocking the playbook from completing
       async: 1000
