@@ -1,3 +1,5 @@
+## EXAMPLE VARS:
+# app_user_account = "appuser"
 ---
 - name: install node and npm
   hosts: node_servers
@@ -16,7 +18,7 @@
   tasks:
     - name: create linux user
       user:
-        name: appuser
+        name: "{{app_user_account}}"
         comment: Nodejs app user
         group: admin
 
@@ -24,24 +26,24 @@
   hosts: node_servers
   # these next two attributes enable this play to run as the user we specified instead of root
   become: True
-  become_user: appuser
+  become_user: "{{app_user_account}}"
   tasks:
     - name: copy nodejs folder to server
       copy:
         src: /home/robert/git/simple-nodejs/nodejs-app-1.0.0.tgz
-        dest: /home/appuser/app-1.0.0.tgz
+        dest: /home/"{{app_user_account}}"/app-1.0.0.tgz
     - name: unpack nodejs tar file
       unarchive:
-        src: /home/appuser/app-1.0.0.tgz
-        dest: /home/appuser/
+        src: /home/"{{app_user_account}}"/app-1.0.0.tgz
+        dest: /home/"{{app_user_account}}"/
         remote_src: yes
     - name: install dependencies
       npm:
-        path: /home/appuser/package
+        path: /home/"{{app_user_account}}"/package
     - name: start app
       # 'command' and 'shell' tasks are NOT STATEFUL
       command:
-        chdir: /home/appuser/package/app
+        chdir: /home/"{{app_user_account}}"/package/app
         cmd: node server
       # this attribute "async" prevents the node executable from blocking the playbook from completing
       async: 1000
