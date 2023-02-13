@@ -1,5 +1,5 @@
 [node_servers]
-157.245.139.10
+165.227.202.187
 
 [node_servers:vars]
 ansible_ssh_private_key_file=~/.ssh/id_rsa

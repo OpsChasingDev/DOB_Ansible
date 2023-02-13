@@ -1,5 +1,9 @@
 ## EXAMPLE VARS:
 # app_user_account = "appuser"
+# source_tgz_file_path = "/home/robert/git/simple-nodejs"
+# source_tgz_file_name = "nodejs-app-1.0.0.tgz"
+## EXAMPLE CMD:
+# ansible-playbook -i hosts install-node.yaml -e "source_tgz_file_path=/home/robert/git/simple-nodejs source_tgz_file_name=nodejs-app-1.0.0.tgz app_user_account=appuser"
 ---
 - name: install node and npm
   hosts: node_servers
@@ -30,20 +34,20 @@
   tasks:
     - name: copy nodejs folder to server
       copy:
-        src: /home/robert/git/simple-nodejs/nodejs-app-1.0.0.tgz
-        dest: /home/"{{app_user_account}}"/app-1.0.0.tgz
+        src: "{{source_tgz_file_path}}/{{source_tgz_file_name}}"
+        dest: "/home/{{app_user_account}}/{{source_tgz_file_name}}"
     - name: unpack nodejs tar file
       unarchive:
-        src: /home/"{{app_user_account}}"/app-1.0.0.tgz
-        dest: /home/"{{app_user_account}}"/
+        src: "/home/{{app_user_account}}/{{source_tgz_file_name}}"
+        dest: "/home/{{app_user_account}}/"
         remote_src: yes
     - name: install dependencies
       npm:
-        path: /home/"{{app_user_account}}"/package
+        path: "/home/{{app_user_account}}/package"
     - name: start app
       # 'command' and 'shell' tasks are NOT STATEFUL
       command:
-        chdir: /home/"{{app_user_account}}"/package/app
+        chdir: "/home/{{app_user_account}}/package/app"
         cmd: node server
       # this attribute "async" prevents the node executable from blocking the playbook from completing
       async: 1000
