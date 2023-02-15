@@ -20,7 +20,10 @@
       get_url:
         url: https://download.sonatype.com/nexus/3/latest-unix.tar.gz
         dest: /opt/
+      register: download_result
+    - debug: msg={{download_result}}
     - name: unpack Nexus installer
       unarchive:
-        src: /opt/nexus-3.47.1-01-unix.tar.gz
+        src: "{{download_result.dest}}"
         dest: /opt/
+        remote_src: yes
