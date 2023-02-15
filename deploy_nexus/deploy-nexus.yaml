@@ -1,0 +1,22 @@
+---
+- name: install java and net-tools
+  hosts: nexus_server
+  tasks:
+    - name: Update apt repo and cache
+      apt: update_cache=true force_apt_get=yes cache_valid_time=3600
+    - name: install java 8
+      apt:
+        name: openjdk-8-jre-headless
+        update_cache: true
+    - name: install net-tools
+      apt:
+        name: net-tools
+        update_cache: true
+
+- name: download and extract Nexus installer
+  hosts: nexus_server
+  tasks:
+    - name: download Nexus
+      get_url:
+        url: https://download.sonatype.com/nexus/3/latest-unix.tar.gz
+        dest: /opt/
