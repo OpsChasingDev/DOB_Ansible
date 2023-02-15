@@ -20,3 +20,7 @@
       get_url:
         url: https://download.sonatype.com/nexus/3/latest-unix.tar.gz
         dest: /opt/
+    - name: unpack Nexus installer
+      unarchive:
+        src: /opt/nexus-3.47.1-01-unix.tar.gz
+        dest: /opt/
