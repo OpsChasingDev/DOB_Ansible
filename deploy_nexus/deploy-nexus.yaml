@@ -39,7 +39,7 @@
         path: /opt/nexus
       register: stat_result
     - debug: msg={{stat_result.stat.exists}}
-    # conditional ensures this task only happens if the folder does not exist
     - name: rename Nexus folder
       shell: mv {{find_result.files[0].path}} /opt/nexus
+      # conditional ensures this task only happens if the folder does not exist
       when: not stat_result.stat.exists
