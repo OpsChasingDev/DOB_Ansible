@@ -44,7 +44,7 @@
       # conditional ensures this task only happens if the folder does not exist
       when: not stat_result.stat.exists
 
-- name: create Nexus user
+- name: create Nexus user and give folder ownership
   hosts: nexus_server
   tasks:
     - name: create Nexus group
@@ -69,3 +69,15 @@
         owner: nexus
         group: nexus
         recurse: yes
+
+- name: configure Nexus to start as the nexus user
+  hosts: nexus_server
+  tasks:
+    - name: set run_as_user nexus.rc file
+      # similar to the 'blockinfile' module is a module called 'lineinfile'
+      # 'lineinfile' is useful in single-line cases to verify something is set or replace something
+      blockinfile:
+        path: /opt/nexus/bin/nexus.rc
+        # pipe char is yaml syntax for a multi-line string (similar to a here-string)
+        block: |
+          run_as_user="nexus"
