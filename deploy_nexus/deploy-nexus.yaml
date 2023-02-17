@@ -71,8 +71,10 @@
         group: nexus
         recurse: yes
 
-- name: configure Nexus to start as the nexus user
+- name: start Nexus as the nexus user
   hosts: nexus_server
+  become: true
+  become_user: nexus
   tasks:
     - name: set run_as_user nexus.rc file
       #blockinfile:
@@ -86,3 +88,5 @@
         path: /opt/nexus/bin/nexus.rc
         regexp: '^#run_as_user=""'
         line: run_as_user="nexus"
+    - name: start Nexus
+      command: /opt/nexus/bin/nexus start
