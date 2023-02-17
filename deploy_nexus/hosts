@@ -1,5 +1,5 @@
 [nexus_server]
-137.184.209.74
+134.122.127.102
 
 [nexus_server:vars]
 ansible_ssh_private_key_file=~/.ssh/id_rsa
