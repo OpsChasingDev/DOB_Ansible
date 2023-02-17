@@ -74,10 +74,14 @@
   hosts: nexus_server
   tasks:
     - name: set run_as_user nexus.rc file
+      #blockinfile:
+        #path: /opt/nexus/bin/nexus.rc
+         # pipe char is yaml syntax for a multi-line string (similar to a here-string)
+        #block: |
+          #run_as_user="nexus"
       # similar to the 'blockinfile' module is a module called 'lineinfile'
       # 'lineinfile' is useful in single-line cases to verify something is set or replace something
-      blockinfile:
+      lineinfile:
         path: /opt/nexus/bin/nexus.rc
-        # pipe char is yaml syntax for a multi-line string (similar to a here-string)
-        block: |
-          run_as_user="nexus"
+        regexp: '^#run_as_user=""'
+        line: run_as_user="nexus"
