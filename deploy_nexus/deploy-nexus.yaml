@@ -90,3 +90,15 @@
         line: run_as_user="nexus"
     - name: start Nexus
       command: /opt/nexus/bin/nexus start
+
+- name: verify Nexus is running
+  hosts: nexus_server
+  tasks:
+    - name: check with 'ps' command
+      shell: ps aux | grep nexus
+      register: app_status
+    - debug: msg={{app_status.stdout_lines}}
+    - name: Check with netstat
+      shell: netstat -plnt
+      register: app_status
+    - debug: msg={{app_status.stdout_lines}}
