@@ -43,3 +43,29 @@
       shell: mv {{find_result.files[0].path}} /opt/nexus
       # conditional ensures this task only happens if the folder does not exist
       when: not stat_result.stat.exists
+
+- name: create Nexus user
+  hosts: nexus_server
+  tasks:
+    - name: create Nexus group
+      group:
+        name: nexus
+        state: present
+    - name: create Nexus user
+      user:
+        name: nexus
+        group: nexus
+    - name: make nexus user owner of Nexus folder
+      file:
+        path: /opt/nexus
+        state: directory
+        owner: nexus
+        group: nexus
+        recurse: yes
+    - name: make nexus user owner of Sonatype folder
+      file:
+        path: /opt/sonatype-work
+        state: directory
+        owner: nexus
+        group: nexus
+        recurse: yes
