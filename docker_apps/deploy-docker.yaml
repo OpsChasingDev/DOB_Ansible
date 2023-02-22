@@ -20,3 +20,13 @@
         name: docker
         update_cache: yes
         state: present
+
+- name: install Docker Compose
+  hosts: docker_server
+  tasks:
+    - name: install docker compose
+      get_url:
+        # url uses 'lookup' plugin which is an Ansible-specific extension to Jinja
+        urL: https://github.com/docker/compose/releases/download/1.27.4/docker-compose-Linux-{{lookup('pipe', 'uname -m')}}
+        dest: /usr/local/bin/docker-compose
+        mode: +x
