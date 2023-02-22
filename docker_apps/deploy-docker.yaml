@@ -21,6 +21,7 @@
         update_cache: yes
         state: present
 
+# uses get_url module for 'curl'ing
 - name: install Docker Compose
   hosts: docker_server
   become: yes
@@ -32,6 +33,7 @@
         dest: /usr/local/bin/docker-compose
         mode: +x
 
+# uses systemd module to work with services
 - name: start Docker
   hosts: docker_server
   become: yes
@@ -40,3 +42,19 @@
       systemd:
         name: docker
         state: started
+
+- name: add ec2-user to Docker group
+  hosts: docker_server
+  become: yes
+  tasks:
+    - name: add ec2-user to docker group
+      user:
+        name: ec2-user
+        groups: docker
+        append: yes
+
+- name: Test Docker pull
+  hosts: docker_server
+  tasks:
+    - name: pull redis
+      command: docker pull redis
