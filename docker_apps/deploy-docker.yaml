@@ -26,6 +26,9 @@
       systemd:
         name: docker
         state: started
+    - name: install docker python module
+      pip:
+        name: docker
     - name: add ec2-user to docker group
       user:
         name: ec2-user
