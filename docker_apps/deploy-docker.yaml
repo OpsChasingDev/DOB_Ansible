@@ -10,49 +10,28 @@
         name: python3
         update_cache: yes
         state: present
-
-- name: install Docker
-  hosts: docker_server
-  become: yes
-  tasks:
     - name: install Docker
       yum:
         name: docker
         update_cache: yes
         state: present
-
-# uses get_url module for 'curl'ing
-- name: install Docker Compose
-  hosts: docker_server
-  become: yes
-  tasks:
     - name: install docker compose
       get_url:
         # url uses 'lookup' plugin which is an Ansible-specific extension to Jinja
         url: https://github.com/docker/compose/releases/download/1.27.4/docker-compose-Linux-{{lookup('pipe', 'uname -m')}}
         dest: /usr/local/bin/docker-compose
         mode: +x
-
-# uses systemd module to work with services
-- name: start Docker
-  hosts: docker_server
-  become: yes
-  tasks:
+    # uses systemd module to work with services
     - name: start docker daemon
       systemd:
         name: docker
         state: started
-
-- name: add ec2-user to Docker group
-  hosts: docker_server
-  become: yes
-  tasks:
     - name: add ec2-user to docker group
       user:
         name: ec2-user
         groups: docker
         append: yes
-    # task reconnects session to apply user group membership changes in previous task
+    # reconnects session to apply user group membership changes in previous task
     - name: reconnect to server session
       meta: reset_connection
 
