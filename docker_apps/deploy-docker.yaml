@@ -52,6 +52,9 @@
         name: ec2-user
         groups: docker
         append: yes
+    # task reconnects session to apply user group membership changes in previous task
+    - name: reconnect to server session
+      meta: reset_connection
 
 - name: Test Docker pull
   hosts: docker_server
