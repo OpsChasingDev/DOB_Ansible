@@ -1,0 +1,10 @@
+---
+- name: install Docker
+  hosts: docker_server
+  become: yes
+  tasks:
+    - name: install Docker
+      yum:
+        name: docker
+        update_cache: yes
+        state: present
