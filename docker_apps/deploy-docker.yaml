@@ -1,4 +1,14 @@
 ---
+- name: install Python3
+  hosts: docker_server
+  become: yes
+  tasks:
+    - name: install Python3
+      yum:
+        name: python3
+        update_cache: yes
+        state: present
+
 - name: install Docker
   hosts: docker_server
   become: yes
