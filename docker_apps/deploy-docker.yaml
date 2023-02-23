@@ -1,6 +1,6 @@
 ---
 - name: Python and Docker Setup
-  hosts: docker_server
+  hosts: all
   become: yes
   tasks:
     - name: install Python3
@@ -39,7 +39,7 @@
       meta: reset_connection
 
 - name: Test Docker pull
-  hosts: docker_server
+  hosts: all
   vars_files:
     - project-vars
   tasks:
