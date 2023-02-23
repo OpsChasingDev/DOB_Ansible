@@ -1,4 +1,21 @@
 ---
+- name: Verify ssh connection is possible
+  hosts: all
+  gather_facts: False
+  tasks:
+    - name: ensure ssh connection
+      # allows us to execute some logic and wait until it becomes "true" before moving to next task
+      wait_for:
+        port: 22
+        delay: 10 # delay in seconds
+        timeout: 100 # timeout in seconds
+        search_regex: OpenSSH # additional condition for more detail and granularity
+        host: '{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}'
+      vars:
+        ansible_connection: local # execute the above checks from our local controlling machine
+        ansible_python_interpreter: /usr/bin/python # using Python2 interpret because 3 not installed on ec2
+
+
 - name: Python and Docker Setup
   hosts: all
   become: yes
@@ -37,6 +54,7 @@
     # reconnects session to apply user group membership changes in previous task
     - name: reconnect to server session
       meta: reset_connection
+
 
 - name: Test Docker pull
   hosts: all
