@@ -40,6 +40,8 @@
 
 - name: Test Docker pull
   hosts: docker_server
+  vars_files:
+    - project-vars
   tasks:
     - name: pull redis
       docker_image:

@@ -1,0 +1,2 @@
+docker_password: # this would be set to something and the file would be added to .gitignore #
+# vars would be called in the playbook by using the variable name in Jinja syntax {{password}}
