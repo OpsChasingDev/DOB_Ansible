@@ -13,7 +13,7 @@
         host: '{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}'
       vars:
         ansible_connection: local # execute the above checks from our local controlling machine
-        ansible_python_interpreter: /usr/bin/python # using Python2 interpret because 3 not installed on ec2
+        #ansible_python_interpreter: /usr/bin/python # using Python2 interpret because 3 not installed on ec2
 
 
 - name: Python and Docker Setup
