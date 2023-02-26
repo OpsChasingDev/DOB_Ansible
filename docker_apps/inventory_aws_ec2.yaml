@@ -30,3 +30,6 @@ filters:
 # dynamic groups
 keyed_groups:
   - key: tags
+    prefix: tag
+  - key: instance_type
+    prefix: instance_type
