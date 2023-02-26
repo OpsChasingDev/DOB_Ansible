@@ -1,4 +1,6 @@
 # this file MUST end in "aws_ec2.yaml" in order for the plugin to work
+# running the below will get you the queried inventory output
+# ansible-inventory -i inventory_aws_ec2.yaml --graph
 ---
 plugin: aws_ec2
 region:
