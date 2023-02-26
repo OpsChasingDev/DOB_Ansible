@@ -1,6 +1,6 @@
 ---
 - name: Verify ssh connection is possible
-  hosts: all
+  hosts: aws_ec2
   gather_facts: False
   tasks:
     - name: ensure ssh connection
@@ -17,7 +17,7 @@
 
 
 - name: Python and Docker Setup
-  hosts: all
+  hosts: aws_ec2
   become: yes
   tasks:
     - name: install Python3
@@ -57,7 +57,7 @@
 
 
 - name: Test Docker pull
-  hosts: all
+  hosts: aws_ec2
   vars_files:
     - project-vars
   tasks:
