@@ -27,3 +27,6 @@ region:
 # filters allow targeting of specific instance(s) instead of all in the region
 filters:
   tag:Name: dev*
+# dynamic groups
+keyed_groups:
+  - key: tags
