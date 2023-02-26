@@ -24,3 +24,6 @@
 plugin: aws_ec2
 region:
   - us-east-1
+# filters allow targeting of specific instance(s) instead of all in the region
+filters:
+  tag:Name: dev*
