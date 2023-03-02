@@ -1,0 +1,67 @@
+---
+- name: Verify ssh connection is possible
+  hosts: aws_ec2
+  gather_facts: False
+  tasks:
+    - name: ensure ssh connection
+      # allows us to execute some logic and wait until it becomes "true" before moving to next task
+      wait_for:
+        port: 22
+        delay: 10 # delay in seconds
+        timeout: 100 # timeout in seconds
+        search_regex: OpenSSH # additional condition for more detail and granularity
+        host: '{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}'
+      vars:
+        ansible_connection: local # execute the above checks from our local controlling machine
+        #ansible_python_interpreter: /usr/bin/python # using Python2 interpret because 3 not installed on ec2
+
+
+- name: Python and Docker Setup
+  hosts: aws_ec2
+  become: yes
+  tasks:
+    - name: install Python3
+      vars:
+        ansible_python_interpreter: /usr/bin/python
+      yum:
+        name: python3
+        update_cache: yes
+        state: present
+    - name: install Docker
+      yum:
+        name: docker
+        update_cache: yes
+        state: present
+    - name: install docker compose
+      get_url:
+        # url uses 'lookup' plugin which is an Ansible-specific extension to Jinja
+        url: https://github.com/docker/compose/releases/download/1.27.4/docker-compose-Linux-{{lookup('pipe', 'uname -m')}}
+        dest: /usr/local/bin/docker-compose
+        mode: +x
+    # uses systemd module to work with services
+    - name: start docker daemon
+      systemd:
+        name: docker
+        state: started
+    - name: install docker python module
+      pip:
+        name: docker
+    - name: add ec2-user to docker group
+      user:
+        name: ec2-user
+        groups: docker
+        append: yes
+    # reconnects session to apply user group membership changes in previous task
+    - name: reconnect to server session
+      meta: reset_connection
+
+
+- name: Test Docker pull
+  hosts: aws_ec2
+  vars_files:
+    - project-vars
+  tasks:
+    - name: pull redis
+      docker_image:
+        name: redis
+        source: pull
